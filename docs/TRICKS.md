@@ -52,3 +52,11 @@ With a local config you can override the scan type and even configure the comman
 ## Use CI build reference as runGuid
 
 By setting the environment variable `SCAN_ID` you can re-use the CI build reference as the run guid for the reports. This is useful to reverse lookup the pipeline result based on the sast-scan result.
+
+## Disable telemetry
+
+There is some basic telemetry enabled by default to understand the types of projects being used by AppThreat users. This data will be used to prioritise future work. If you hate telemetry then simply set this environment variable and pass it via the docker run command.
+
+```bash
+export DISABLE_TELEMETRY="true"
+```

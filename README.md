@@ -19,9 +19,9 @@ This repo builds `appthreat/sast-scan` (and `quay.io/appthreat/sast-scan`), a co
 
 - No messy configuration and no server required
 - Scanning is performed directly in the CI and is extremely quick. Full scan often takes only couple of minutes
-- Gorgeous [HTML](http://htmlpreview.github.io/?https://github.com/AppThreat/sast-scan/blob/master/docs/findsecbugs-report.html) [reports](http://htmlpreview.github.io/?https://github.com/AppThreat/sast-scan/blob/master/docs/pmd-report.html) that you can proudly share with your colleagues and the security team
+- Gorgeous [HTML](http://htmlpreview.github.io/?https://github.com/AppThreat/sast-scan/blob/master/docs/findsecbugs-report.html) [reports](http://htmlpreview.github.io/?https://github.com/AppThreat/sast-scan/blob/master/docs/pmd-report.html) that you can proudly share with your colleagues, and the security team
 - Automatic exit code 1 (build breaker) with critical and high vulnerabilities
-- There are a number of small things that will bring smile to any DevOps team
+- There are a number of small things that will bring a smile to any DevOps team
 
 ## Bundled tools
 
@@ -149,6 +149,12 @@ docker run --rm -e "WORKSPACE=${PWD}" -v ~/.m2:/.m2 -v <source path>:/app appthr
 
 # For gradle project
 docker run --rm -e "WORKSPACE=${PWD}" -v ~/.gradle:/.gradle -v <source path>:/app appthreat/sast-scan scan --src /app --type java
+```
+
+Scan python project (Without any telemetry)
+
+```bash
+docker run --rm -e "WORKSPACE=${PWD}" -e "DISABLE_TELEMETRY=true" -v $PWD:/app appthreat/sast-scan scan --src /app --type python
 ```
 
 **Automatic project detection**
