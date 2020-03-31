@@ -68,7 +68,7 @@ def detect_project_type(src_dir):
         project_types.append("nodejs")
         depscan_supported = True
     if find_files(src_dir, "go.sum") or find_files(src_dir, "Gopkg.lock"):
-        project_types.append("golang")
+        project_types.append("go")
         depscan_supported = True
     if find_files(src_dir, "Cargo.lock"):
         project_types.append("rust")
