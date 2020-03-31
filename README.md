@@ -136,13 +136,19 @@ SARIF reports produced by sast-scan can be integrated with other compatible tool
 Scan python project
 
 ```bash
-docker run --rm -e "WORKSPACE=${PWD}" -v $PWD:/app appthreat/sast-scan scan --src /app --type python
+docker run --rm -e "WORKSPACE=${PWD}" -v "$PWD:/app:cached" appthreat/sast-scan scan --src /app --type python
+```
+
+Windows
+
+```bash
+docker run --rm -e "WORKSPACE=%cd%" -v "%cd%:/app:cached" appthreat/sast-scan scan --src /app --type python
 ```
 
 Scan multiple projects
 
 ```bash
-docker run --rm -e "WORKSPACE=${PWD}" -v $PWD:/app appthreat/sast-scan scan --src /app --type credscan,nodejs,python,yaml --out_dir /app/reports
+docker run --rm -e "WORKSPACE=${PWD}" -v "$PWD:/app:cached" appthreat/sast-scan scan --src /app --type credscan,nodejs,python,yaml --out_dir /app/reports
 ```
 
 Scan java project
