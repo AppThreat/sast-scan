@@ -12,6 +12,8 @@ ENV GOSEC_VERSION=2.2.0 \
     GRADLE_VERSION=6.0.1 \
     GRADLE_HOME=/opt/gradle-${GRADLE_VERSION} \
     SC_VERSION=2019.2.3 \
+    PMD_VERSION=6.22.0 \
+    PMD_CMD="/opt/pmd-bin-${PMD_VERSION}/bin/run.sh pmd" \
     JQ_VERSION=1.6 \
     FSB_VERSION=1.10.1 \
     FB_CONTRIB_VERSION=7.4.7 \
@@ -46,6 +48,9 @@ RUN curl -L "https://github.com/zricethezav/gitleaks/releases/download/v${GITLEA
     && rm shellcheck-stable.linux.x86_64.tar.xz
 RUN curl -L "https://github.com/zegl/kube-score/releases/download/v${KUBE_SCORE_VERSION}/kube-score_${KUBE_SCORE_VERSION}_linux_amd64" -o "/usr/local/bin/appthreat/kube-score" \
     && chmod +x /usr/local/bin/appthreat/kube-score \
+    && wget "https://github.com/pmd/pmd/releases/download/pmd_releases%2F${PMD_VERSION}/pmd-bin-${PMD_VERSION}.zip" \
+    && unzip -q pmd-bin-${PMD_VERSION}.zip -d /opt/ \
+    && rm pmd-bin-${PMD_VERSION}.zip \
     && curl -L "https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64" -o "/usr/local/bin/appthreat/jq" \
     && chmod +x /usr/local/bin/appthreat/jq
 RUN curl -L "https://github.com/arturbosch/detekt/releases/download/${DETEKT_VERSION}/detekt-cli-${DETEKT_VERSION}-all.jar" -o "/usr/local/bin/appthreat/detekt-cli.jar" \
@@ -77,10 +82,16 @@ LABEL maintainer="AppThreat" \
 
 ENV APP_SRC_DIR=/usr/local/src \
     DEPSCAN_CMD="/usr/local/bin/depscan" \
+    PMD_CMD="/opt/pmd-bin/bin/run.sh pmd" \
+    SB_VERSION=4.0.1 \
+    PMD_VERSION=6.22.0 \
+    PMD_JAVA_OPTS="--enable-preview" \
     SPOTBUGS_HOME=/opt/spotbugs \
-    JAVA_HOME=/usr/lib/jvm/jre-11 \
+    JAVA_HOME=/usr/lib/jvm/java-11-openjdk-11.0.6.10-0.el8_1.x86_64 \
+    GRADLE_VERSION=6.0.1 \
+    GRADLE_HOME=/opt/gradle \
     PYTHONUNBUFFERED=1 \
-    PATH=/usr/local/src/:${PATH}:/usr/local/go/bin:/opt/.cargo/bin:
+    PATH=/usr/local/src/:${PATH}:/opt/gradle/bin:/usr/lib/jvm/java-11-openjdk-11.0.6.10-0.el8_1.x86_64/bin:/usr/local/go/bin:/opt/.cargo/bin:
 
 COPY --from=builder /usr/local/bin/appthreat /usr/local/bin
 COPY --from=builder /usr/local/lib64/gems /usr/local/lib64/gems
@@ -90,7 +101,11 @@ COPY --from=builder /usr/local/bin/puppet-lint /usr/local/bin/puppet-lint
 COPY --from=builder /usr/local/bin/cyclonedx-ruby /usr/local/bin/cyclonedx-ruby
 COPY --from=builder /opt/app-root/src/.cargo/bin /opt/.cargo/bin
 COPY spotbugs /usr/local/src/spotbugs
-COPY --from=builder /opt/spotbugs-4.0.1 /opt/spotbugs
+COPY --from=builder /opt/pmd-bin-${PMD_VERSION} /opt/pmd-bin
+COPY --from=builder /opt/spotbugs-${SB_VERSION} /opt/spotbugs
+COPY --from=builder /opt/gradle-${GRADLE_VERSION} /opt/gradle
+COPY rules-pmd.xml /usr/local/src/
+
 COPY requirements.txt /usr/local/src/
 
 USER root
@@ -102,7 +117,7 @@ RUN pip3 install --no-cache-dir wheel bandit ansible-lint pipenv cfn-lint yamlli
     && npm install -g @appthreat/cdxgen \
     && microdnf remove -y ruby-devel xz shadow-utils
 
-WORKDIR /usr/local/src
+WORKDIR /app
 
 COPY scan /usr/local/src/
 COPY lib /usr/local/src/lib

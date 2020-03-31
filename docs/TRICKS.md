@@ -55,7 +55,7 @@ By setting the environment variable `SCAN_ID` you can re-use the CI build refere
 
 ## Disable telemetry
 
-There is some basic telemetry enabled by default to understand the types of projects being used by AppThreat users. This data will be used to prioritise future work. If you hate telemetry then simply set this environment variable and pass it via the docker run command.
+There is some basic telemetry code (enabled by default) to understand the types of projects being used by AppThreat users. This data will be used to prioritise future work. If you hate telemetry then simply set this environment variable and pass it via the docker run command.
 
 ```bash
 export DISABLE_TELEMETRY="true"

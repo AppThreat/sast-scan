@@ -37,14 +37,16 @@ def find_jar_files():
     return result
 
 
-def find_files(src, src_ext_name):
+def find_files(src, src_ext_name, use_start=False):
     """
-    Method to find files with given extenstion
+    Method to find files with given extension
     """
     result = []
     for root, dirs, files in os.walk(src):
         for file in files:
             if file == src_ext_name or file.endswith(src_ext_name):
+                result.append(os.path.join(root, file))
+            elif use_start and file.startswith(src_ext_name):
                 result.append(os.path.join(root, file))
     return result
 
@@ -58,11 +60,20 @@ def detect_project_type(src_dir):
     """
     project_types = ["credscan"]
     depscan_supported = False
+    if find_files(src_dir, ".cls"):
+        project_types.append("apex")
     if find_python_reqfiles(src_dir):
         project_types.append("python")
         depscan_supported = True
+    if find_files(src_dir, ".sql"):
+        project_types.append("plsql")
+    if find_files(src_dir, ".scala"):
+        project_types.append("scala")
     if find_files(src_dir, "pom.xml") or find_files(src_dir, ".gradle"):
         project_types.append("java")
+        depscan_supported = True
+    if find_files(src_dir, ".jsp"):
+        project_types.append("jsp")
         depscan_supported = True
     if find_files(src_dir, "package.json"):
         project_types.append("nodejs")
@@ -77,6 +88,15 @@ def detect_project_type(src_dir):
         project_types.append("terraform")
     if find_files(src_dir, ".yaml"):
         project_types.append("yaml")
+    if (
+        find_files(src_dir, ".component")
+        or find_files(src_dir, ".cmp")
+        or find_files(src_dir, ".page")
+    ):
+        project_types.append("vf")
+    if find_files(src_dir, ".vm"):
+        project_types.append("vm")
+        depscan_supported = True
     if find_files(src_dir, ".sh"):
         project_types.append("bash")
     if depscan_supported:

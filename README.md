@@ -28,6 +28,7 @@ This repo builds `appthreat/sast-scan` (and `quay.io/appthreat/sast-scan`), a co
 | Programming Language | Tools                              |
 | -------------------- | ---------------------------------- |
 | ansible              | ansible-lint                       |
+| apex                 | pmd                                |
 | aws                  | cfn-lint, cfn_nag                  |
 | bash                 | shellcheck                         |
 | bom                  | cdxgen                             |
@@ -35,15 +36,19 @@ This repo builds `appthreat/sast-scan` (and `quay.io/appthreat/sast-scan`), a co
 | depscan              | dep-scan                           |
 | go                   | gosec, staticcheck                 |
 | java                 | cdxgen, gradle, find-sec-bugs, pmd |
+| jsp                  | pmd                                |
 | json                 | jq, jsondiff, jsonschema           |
 | kotlin               | detekt                             |
 | kubernetes           | kube-score                         |
 | nodejs               | cdxgen, NodeJsScan, eslint, yarn   |
 | puppet               | puppet-lint                        |
+| plsql                | pmd                                |
 | python               | bandit, cdxgen, pipenv             |
 | ruby                 | cyclonedx-ruby                     |
 | rust                 | cdxgen, cargo-audit                |
 | terraform            | tfsec                              |
+| Visual Force (vf)    | pmd                                |
+| Apache Velocity (vm) | pmd                                |
 | yaml                 | yamllint                           |
 
 ## Bundled languages/runtime
@@ -65,7 +70,7 @@ Some reports get converted into an open-standard called [SARIF](https://sarifweb
 - Credscan - gitleaks
 - Python - bandit
 - Node.js - NodeJsScan
-- Java - pmd, find-sec-bugs
+- pmd, find-sec-bugs
 - Go - gosec, staticcheck
 - Terraform - tfsec
 
