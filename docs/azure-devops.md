@@ -5,12 +5,11 @@ sast-scan has good integration with Azure Pipelines. This repo contains an [exam
 ```yaml
 - script: |
     docker run -e "WORKSPACE=https://github.com/AppThreat/WebGoat/blob/$(Build.SourceVersion)" \
-      -v $(Build.SourcesDirectory):/app \
-      -v $(Build.ArtifactStagingDirectory):/reports \
+      -v "$(Build.SourcesDirectory):/app:cached" \
+      -v "$(Build.ArtifactStagingDirectory):/reports:cached" \
       quay.io/appthreat/sast-scan scan --src /app \
-      --type credscan,java,bash,nodejs \
       --out_dir /reports/CodeAnalysisLogs
-  displayName: "Java and Credscan"
+  displayName: "Perform AppThreat Scan"
   continueOnError: "true"
 ```
 
