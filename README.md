@@ -33,7 +33,7 @@ This repo builds `appthreat/sast-scan` (and `quay.io/appthreat/sast-scan`), a co
 | bom                  | cdxgen                             |
 | credscan             | gitleaks                           |
 | depscan              | dep-scan                           |
-| golang               | gosec, staticcheck                 |
+| go                   | gosec, staticcheck                 |
 | java                 | cdxgen, gradle, find-sec-bugs, pmd |
 | json                 | jq, jsondiff, jsonschema           |
 | kotlin               | detekt                             |
@@ -49,7 +49,7 @@ This repo builds `appthreat/sast-scan` (and `quay.io/appthreat/sast-scan`), a co
 ## Bundled languages/runtime
 
 - jq
-- Golang 1.12
+- Go 1.12
 - Python 3.6
 - OpenJDK 11 (jre)
 - Ruby 2.5.5
@@ -66,7 +66,7 @@ Some reports get converted into an open-standard called [SARIF](https://sarifweb
 - Python - bandit
 - Node.js - NodeJsScan
 - Java - pmd, find-sec-bugs
-- Golang - gosec, staticcheck
+- Go - gosec, staticcheck
 - Terraform - tfsec
 
 ## Usage

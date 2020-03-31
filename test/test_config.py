@@ -32,8 +32,8 @@ def test_scan_tools_map():
 
 def test_override():
     build_break_rules = config.get("build_break_rules").copy()
-    golang_cmd = config.get("scan_tools_args_map").get("golang")
-    assert list(golang_cmd.keys()) == ["gosec", "staticcheck"]
+    go_cmd = config.get("scan_tools_args_map").get("go")
+    assert list(go_cmd.keys()) == ["gosec", "staticcheck"]
     test_data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
     config.set("SAST_SCAN_SRC_DIR", test_data_dir)
     config.reload()
@@ -41,6 +41,6 @@ def test_override():
     new_rules = config.get("build_break_rules")
     assert build_break_rules != new_rules
     # Test if we are able to override a command
-    golang_cmd = config.get("scan_tools_args_map").get("golang")
-    assert golang_cmd[0] == "echo"
+    go_cmd = config.get("scan_tools_args_map").get("go")
+    assert go_cmd[0] == "echo"
     assert config.get("scan_type") == "credscan,java"

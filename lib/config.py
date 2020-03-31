@@ -29,7 +29,7 @@ scan_types = [
     "bom",
     "credscan",
     "depscan",
-    "golang",
+    "go",
     "java",
     "kotlin",
     "kubernetes",
@@ -128,7 +128,7 @@ scan_tools_args_map = {
         "--report_file",
         "%(report_fname_prefix)s.json",
     ],
-    "golang": {
+    "go": {
         "gosec": [
             "gosec",
             "-fmt=json",
@@ -165,7 +165,7 @@ tool_purpose_message = {
     "findsecbugs": "Security audit by Find Security Bugs",
     "pmd": "Static code analysis by PMD",
     "gitleaks": "Secrets audit by gitleaks",
-    "gosec": "Golang security checks by gosec",
+    "gosec": "Go security checks by gosec",
     "tfsec": "Terraform static analysis by tfsec",
     "shellcheck": "Shell script analysis by shellcheck",
     "bandit": "Security audit for python by bandit",
