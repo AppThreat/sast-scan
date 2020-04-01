@@ -122,3 +122,26 @@ def get_report_file(tool_name, reports_dir, convert, ext_name="json"):
         fp = tempfile.NamedTemporaryFile(delete=False)
         report_fname = fp.name
     return report_fname
+
+
+def get_workspace(repo_context):
+    """
+    Construct the workspace url from the given repo context
+
+    :param repo_context: Repo context from context.py
+    :return: Workspace url for known VCS or None
+    """
+    if not repo_context["repositoryUri"]:
+        return None
+    revision = repo_context.get("revisionId", repo_context.get("branch"))
+    if "github.com" in repo_context["repositoryUri"]:
+        return "{}/blob/{}".format(repo_context["repositoryUri"], revision)
+    if "gitlab" in repo_context["repositoryUri"]:
+        return "{}/-/blob/{}".format(repo_context["repositoryUri"], revision)
+    if "bitbucket" in repo_context["repositoryUri"] and repo_context.get("revisionId"):
+        return "{}/src/{}".format(repo_context["repositoryUri"], revision)
+    if "azure.com" in repo_context["repositoryUri"] and repo_context.get("branch"):
+        return "{}?_a=contents&version=GB{}&path=".format(
+            repo_context["repositoryUri"], repo_context.get("branch")
+        )
+    return None

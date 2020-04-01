@@ -11,6 +11,8 @@ ENV GOSEC_VERSION=2.2.0 \
     GITLEAKS_VERSION=4.1.0 \
     GRADLE_VERSION=6.0.1 \
     GRADLE_HOME=/opt/gradle-${GRADLE_VERSION} \
+    MAVEN_VERSION=3.6.3 \
+    MAVEN_HOME=/opt/apache-maven-${MAVEN_VERSION} \
     SC_VERSION=2019.2.3 \
     PMD_VERSION=6.22.0 \
     PMD_CMD="/opt/pmd-bin-${PMD_VERSION}/bin/run.sh pmd" \
@@ -32,6 +34,10 @@ RUN curl -LO "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}
     && unzip -q gradle-${GRADLE_VERSION}-bin.zip -d /opt/ \
     && chmod +x /opt/gradle-${GRADLE_VERSION}/bin/gradle \
     && rm gradle-${GRADLE_VERSION}-bin.zip \
+    && curl -LO "https://downloads.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.zip" \
+    && unzip -q apache-maven-${MAVEN_VERSION}-bin.zip -d /opt/ \
+    && chmod +x /opt/apache-maven-${MAVEN_VERSION}/bin/mvn \
+    && rm apache-maven-${MAVEN_VERSION}-bin.zip \
     && curl -LO "https://storage.googleapis.com/shellcheck/shellcheck-stable.linux.x86_64.tar.xz" \
     && tar -C /tmp/ -xvf shellcheck-stable.linux.x86_64.tar.xz \
     && cp /tmp/shellcheck-stable/shellcheck /usr/local/bin/appthreat/shellcheck \
@@ -82,6 +88,7 @@ LABEL maintainer="AppThreat" \
 
 ENV APP_SRC_DIR=/usr/local/src \
     DEPSCAN_CMD="/usr/local/bin/depscan" \
+    MVN_CMD="/opt/apache-maven/bin/mvn" \
     PMD_CMD="/opt/pmd-bin/bin/run.sh pmd" \
     SB_VERSION=4.0.1 \
     PMD_VERSION=6.22.0 \
@@ -90,8 +97,10 @@ ENV APP_SRC_DIR=/usr/local/src \
     JAVA_HOME=/usr/lib/jvm/java-11-openjdk-11.0.6.10-0.el8_1.x86_64 \
     GRADLE_VERSION=6.0.1 \
     GRADLE_HOME=/opt/gradle \
+    MAVEN_VERSION=3.6.3 \
+    MAVEN_HOME=/opt/apache-maven \
     PYTHONUNBUFFERED=1 \
-    PATH=/usr/local/src/:${PATH}:/opt/gradle/bin:/usr/lib/jvm/java-11-openjdk-11.0.6.10-0.el8_1.x86_64/bin:/usr/local/go/bin:/opt/.cargo/bin:
+    PATH=/usr/local/src/:${PATH}:/opt/gradle/bin:/opt/apache-maven/bin:/usr/lib/jvm/java-11-openjdk-11.0.6.10-0.el8_1.x86_64/bin:/usr/local/go/bin:/opt/.cargo/bin:
 
 COPY --from=builder /usr/local/bin/appthreat /usr/local/bin
 COPY --from=builder /usr/local/lib64/gems /usr/local/lib64/gems
@@ -104,6 +113,7 @@ COPY spotbugs /usr/local/src/spotbugs
 COPY --from=builder /opt/pmd-bin-${PMD_VERSION} /opt/pmd-bin
 COPY --from=builder /opt/spotbugs-${SB_VERSION} /opt/spotbugs
 COPY --from=builder /opt/gradle-${GRADLE_VERSION} /opt/gradle
+COPY --from=builder /opt/apache-maven-${MAVEN_VERSION} /opt/apache-maven
 COPY rules-pmd.xml /usr/local/src/
 
 COPY requirements.txt /usr/local/src/

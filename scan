@@ -95,8 +95,9 @@ def scan(type_list, src, reports_dir, convert):
                 getattr(sys.modules[__name__], "%s_scan" % type_str)(
                     src, reports_dir, convert
                 )
-            except:
-                LOG.warning("Project type is not supported: {}".format(type_str))
+            except Exception as e:
+                LOG.error("Received exception: {}".format(e))
+                # LOG.warning("Project type is not supported: {}".format(type_str))
 
 
 def python_scan(src, reports_dir, convert):
@@ -284,8 +285,13 @@ def main():
     run_uuid = os.environ.get("SCAN_ID", str(uuid.uuid4()))
     config.set("run_uuid", run_uuid)
     # Set the source directory as an environment variable
-    config.set("SAST_SCAN_SRC_DIR", args.src_dir)
+    config.set("SAST_SCAN_SRC_DIR", src_dir)
     repo_context = context.find_repo_details(src_dir)
+    workspace = os.environ.get("WORKSPACE", None)
+    if not workspace:
+        workspace = utils.get_workspace(repo_context)
+        if workspace:
+            config.set("WORKSPACE", workspace)
     config.reload()
 
     # Identify project type

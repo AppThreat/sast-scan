@@ -136,19 +136,19 @@ SARIF reports produced by sast-scan can be integrated with other compatible tool
 Scan python project
 
 ```bash
-docker run --rm -e "WORKSPACE=${PWD}" -v "$PWD:/app:cached" appthreat/sast-scan scan --src /app --type python
+docker run --rm -e "WORKSPACE=${PWD}" -v "$PWD:/app:cached" quay.io/appthreat/sast-scan scan --src /app --type python
 ```
 
 Windows
 
 ```bash
-docker run --rm -e "WORKSPACE=%cd%" -v "%cd%:/app:cached" appthreat/sast-scan scan --src /app --type python
+docker run --rm -e "WORKSPACE=%cd%" -v "%cd%:/app:cached" quay.io/appthreat/sast-scan scan --src /app --type python
 ```
 
 Scan multiple projects
 
 ```bash
-docker run --rm -e "WORKSPACE=${PWD}" -v "$PWD:/app:cached" appthreat/sast-scan scan --src /app --type credscan,nodejs,python,yaml --out_dir /app/reports
+docker run --rm -e "WORKSPACE=${PWD}" -v "$PWD:/app:cached" quay.io/appthreat/sast-scan scan --src /app --type credscan,nodejs,python,yaml --out_dir /app/reports
 ```
 
 Scan java project
@@ -156,16 +156,16 @@ Scan java project
 For java and jvm language based projects, it is important to compile the projects before invoking sast-scan in the dev and CI workflow.
 
 ```bash
-docker run --rm -e "WORKSPACE=${PWD}" -v ~/.m2:/.m2 -v <source path>:/app appthreat/sast-scan scan --src /app --type java
+docker run --rm -e "WORKSPACE=${PWD}" -v ~/.m2:/.m2 -v <source path>:/app quay.io/appthreat/sast-scan scan --src /app --type java
 
 # For gradle project
-docker run --rm -e "WORKSPACE=${PWD}" -v ~/.gradle:/.gradle -v <source path>:/app appthreat/sast-scan scan --src /app --type java
+docker run --rm -e "WORKSPACE=${PWD}" -v ~/.gradle:/.gradle -v <source path>:/app quay.io/appthreat/sast-scan scan --src /app --type java
 ```
 
 Scan python project (Without any telemetry)
 
 ```bash
-docker run --rm -e "WORKSPACE=${PWD}" -e "DISABLE_TELEMETRY=true" -v $PWD:/app appthreat/sast-scan scan --src /app --type python
+docker run --rm -e "WORKSPACE=${PWD}" -e "DISABLE_TELEMETRY=true" -v $PWD:/app quay.io/appthreat/sast-scan scan --src /app --type python
 ```
 
 **Automatic project detection**
@@ -177,7 +177,7 @@ Feel free to skip `--type` to enable auto-detection. Or pass comma-separated val
 Bandit
 
 ```bash
-docker run --rm -v <source path>:/app appthreat/sast-scan bandit -r /app
+docker run --rm -v <source path>:/app quay.io/appthreat/sast-scan bandit -r /app
 ```
 
 ## Viewing reports
@@ -208,3 +208,7 @@ Azure DevOps SARIF plugin can be integrated to show the analysis integrated with
 GitLab [SAST](https://docs.gitlab.com/ee/user/application_security/sast/) uses numerous single purpose [analyzers](https://gitlab.com/gitlab-org/security-products/analyzers) and Go based converters to produce a custom json format. This model has the downside of increasing build times since multiple container images should get downloaded and hence is not suitable for CI environments such as Azure Pipelines, CodeBuild and Google CloudBuild. Plus the license used by GitLab is not opensource even though the analyzers merely wrap existing oss tools!
 
 MIR [SWAMP](https://www.mir-swamp.org/) is a free online service for running both oss and commercial static analysis for a number of languages simillar to sast-scan. There is a free SWAMP-in-a-box offering but the setup is a bit cumbersome. They use a xml format called SCARF with a number of perl based converters. SARIF, in contrast, is json based and is much easier to work with for integration and UI purposes. By adopting python, sast-scan is a bit easy to work with for customisation.
+
+## Sponsors
+
+AppThreat is funded and supported by [ShiftLeft](https://shiftleft.io/). For general discussions and suggestions, please feel free to use either the GitHub [issues](https://github.com/AppThreat/sast-scan/issues) or ShiftLeft [discussion forum](https://discuss.shiftleft.io/)

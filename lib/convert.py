@@ -23,8 +23,6 @@ LOG = logging.getLogger(__name__)
 
 TS_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
-WORKSPACE_PREFIX = os.environ.get("WORKSPACE", None)
-
 
 def tweak_severity(tool_name, issue_severity):
     """
@@ -164,6 +162,7 @@ def report(
             metrics[key] = 0
         metrics[key] += 1
     # working directory to use in the log
+    WORKSPACE_PREFIX = config.get("WORKSPACE", None)
     wd_dir_log = WORKSPACE_PREFIX if WORKSPACE_PREFIX else working_dir
     # Construct SARIF log
     log = om.SarifLog(
@@ -304,6 +303,7 @@ def create_result(
     :param file_path_list: Full file path for any manipulation
     :param working_dir: Working directory
     """
+    WORKSPACE_PREFIX = config.get("WORKSPACE", None)
     if isinstance(issue, dict):
         issue = issue_from_dict(issue)
 
