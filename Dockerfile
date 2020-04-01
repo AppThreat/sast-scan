@@ -25,19 +25,21 @@ ENV GOSEC_VERSION=2.2.0 \
 
 USER root
 
-RUN mkdir -p /usr/local/bin/appthreat \
+RUN mkdir -p /usr/local/bin/appthreat /opt/appthreat \
     && curl -LO "https://github.com/securego/gosec/releases/download/v${GOSEC_VERSION}/gosec_${GOSEC_VERSION}_linux_amd64.tar.gz" \
     && tar -C /usr/local/bin/appthreat/ -xvf gosec_${GOSEC_VERSION}_linux_amd64.tar.gz \
     && chmod +x /usr/local/bin/appthreat/gosec \
-    && rm gosec_${GOSEC_VERSION}_linux_amd64.tar.gz
-RUN curl -LO "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" \
-    && unzip -q gradle-${GRADLE_VERSION}-bin.zip -d /opt/ \
-    && chmod +x /opt/gradle-${GRADLE_VERSION}/bin/gradle \
+    && rm gosec_${GOSEC_VERSION}_linux_amd64.tar.gz \
+    && curl -LO "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" \
+    && unzip -q gradle-${GRADLE_VERSION}-bin.zip -d /opt/appthreat/ \
+    && chmod +x /opt/appthreat/gradle-${GRADLE_VERSION}/bin/gradle \
     && rm gradle-${GRADLE_VERSION}-bin.zip \
+    && mv /opt/appthreat/gradle-${GRADLE_VERSION} /opt/appthreat/gradle \
     && curl -LO "https://downloads.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.zip" \
-    && unzip -q apache-maven-${MAVEN_VERSION}-bin.zip -d /opt/ \
-    && chmod +x /opt/apache-maven-${MAVEN_VERSION}/bin/mvn \
+    && unzip -q apache-maven-${MAVEN_VERSION}-bin.zip -d /opt/appthreat/ \
+    && chmod +x /opt/appthreat/apache-maven-${MAVEN_VERSION}/bin/mvn \
     && rm apache-maven-${MAVEN_VERSION}-bin.zip \
+    && mv /opt/appthreat/apache-maven-${MAVEN_VERSION} /opt/appthreat/apache-maven \
     && curl -LO "https://storage.googleapis.com/shellcheck/shellcheck-stable.linux.x86_64.tar.xz" \
     && tar -C /tmp/ -xvf shellcheck-stable.linux.x86_64.tar.xz \
     && cp /tmp/shellcheck-stable/shellcheck /usr/local/bin/appthreat/shellcheck \
@@ -46,30 +48,32 @@ RUN curl -LO "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}
     && tar -C /tmp -xvf staticcheck_linux_amd64.tar.gz \
     && chmod +x /tmp/staticcheck/staticcheck \
     && cp /tmp/staticcheck/staticcheck /usr/local/bin/appthreat/staticcheck \
-    && rm staticcheck_linux_amd64.tar.gz
-RUN curl -L "https://github.com/zricethezav/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks-linux-amd64" -o "/usr/local/bin/appthreat/gitleaks" \
+    && rm staticcheck_linux_amd64.tar.gz \
+    && curl -L "https://github.com/zricethezav/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks-linux-amd64" -o "/usr/local/bin/appthreat/gitleaks" \
     && chmod +x /usr/local/bin/appthreat/gitleaks \
     && curl -L "https://github.com/liamg/tfsec/releases/download/v${TFSEC_VERSION}/tfsec-linux-amd64" -o "/usr/local/bin/appthreat/tfsec" \
     && chmod +x /usr/local/bin/appthreat/tfsec \
-    && rm shellcheck-stable.linux.x86_64.tar.xz
-RUN curl -L "https://github.com/zegl/kube-score/releases/download/v${KUBE_SCORE_VERSION}/kube-score_${KUBE_SCORE_VERSION}_linux_amd64" -o "/usr/local/bin/appthreat/kube-score" \
+    && rm shellcheck-stable.linux.x86_64.tar.xz \
+    && curl -L "https://github.com/zegl/kube-score/releases/download/v${KUBE_SCORE_VERSION}/kube-score_${KUBE_SCORE_VERSION}_linux_amd64" -o "/usr/local/bin/appthreat/kube-score" \
     && chmod +x /usr/local/bin/appthreat/kube-score \
     && wget "https://github.com/pmd/pmd/releases/download/pmd_releases%2F${PMD_VERSION}/pmd-bin-${PMD_VERSION}.zip" \
-    && unzip -q pmd-bin-${PMD_VERSION}.zip -d /opt/ \
+    && unzip -q pmd-bin-${PMD_VERSION}.zip -d /opt/appthreat/ \
     && rm pmd-bin-${PMD_VERSION}.zip \
+    && mv /opt/appthreat/pmd-bin-${PMD_VERSION} /opt/appthreat/pmd-bin \
     && curl -L "https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64" -o "/usr/local/bin/appthreat/jq" \
-    && chmod +x /usr/local/bin/appthreat/jq
-RUN curl -L "https://github.com/arturbosch/detekt/releases/download/${DETEKT_VERSION}/detekt-cli-${DETEKT_VERSION}-all.jar" -o "/usr/local/bin/appthreat/detekt-cli.jar" \
+    && chmod +x /usr/local/bin/appthreat/jq \
+    && curl -L "https://github.com/arturbosch/detekt/releases/download/${DETEKT_VERSION}/detekt-cli-${DETEKT_VERSION}-all.jar" -o "/usr/local/bin/appthreat/detekt-cli.jar" \
     && curl -LO "https://github.com/controlplaneio/kubesec/releases/download/v${KUBESEC_VERSION}/kubesec_linux_amd64.tar.gz" \
     && tar -C /usr/local/bin/appthreat/ -xvf kubesec_linux_amd64.tar.gz \
     && rm kubesec_linux_amd64.tar.gz \
     && curl -LO "https://repo.maven.apache.org/maven2/com/github/spotbugs/spotbugs/${SB_VERSION}/spotbugs-${SB_VERSION}.zip" \
-    && unzip -q spotbugs-${SB_VERSION}.zip -d /opt/ \
+    && unzip -q spotbugs-${SB_VERSION}.zip -d /opt/appthreat/ \
+    && mv /opt/appthreat/spotbugs-${SB_VERSION} /opt/appthreat/spotbugs \
     && curl -LO "https://repo1.maven.org/maven2/com/h3xstream/findsecbugs/findsecbugs-plugin/${FSB_VERSION}/findsecbugs-plugin-${FSB_VERSION}.jar" \
-    && mv findsecbugs-plugin-${FSB_VERSION}.jar /opt/spotbugs-${SB_VERSION}/plugin/findsecbugs-plugin.jar \
+    && mv findsecbugs-plugin-${FSB_VERSION}.jar /opt/appthreat/spotbugs/plugin/findsecbugs-plugin.jar \
     && curl -LO "https://repo1.maven.org/maven2/com/mebigfatguy/fb-contrib/fb-contrib/${FB_CONTRIB_VERSION}/fb-contrib-${FB_CONTRIB_VERSION}.jar" \
-    && mv fb-contrib-${FB_CONTRIB_VERSION}.jar /opt/spotbugs-${SB_VERSION}/plugin/fb-contrib.jar
-RUN gem install -q cfn-nag puppet-lint cyclonedx-ruby && gem cleanup -q
+    && mv fb-contrib-${FB_CONTRIB_VERSION}.jar /opt/appthreat/spotbugs/plugin/fb-contrib.jar \
+    && gem install -q cfn-nag puppet-lint cyclonedx-ruby && gem cleanup -q
 
 FROM quay.io/appthreat/scan-base-slim as sast-scan-tools
 
@@ -109,18 +113,13 @@ COPY --from=builder /usr/local/bin/cfn_nag /usr/local/bin/cfn_nag
 COPY --from=builder /usr/local/bin/puppet-lint /usr/local/bin/puppet-lint
 COPY --from=builder /usr/local/bin/cyclonedx-ruby /usr/local/bin/cyclonedx-ruby
 COPY --from=builder /opt/app-root/src/.cargo/bin /opt/.cargo/bin
-COPY spotbugs /usr/local/src/spotbugs
-COPY --from=builder /opt/pmd-bin-${PMD_VERSION} /opt/pmd-bin
-COPY --from=builder /opt/spotbugs-${SB_VERSION} /opt/spotbugs
-COPY --from=builder /opt/gradle-${GRADLE_VERSION} /opt/gradle
-COPY --from=builder /opt/apache-maven-${MAVEN_VERSION} /opt/apache-maven
-COPY rules-pmd.xml /usr/local/src/
+COPY --from=builder /opt/appthreat/ /opt/
 
-COPY requirements.txt /usr/local/src/
+COPY . /usr/local/src/
 
 USER root
 
-RUN pip3 install --no-cache-dir wheel bandit ansible-lint pipenv cfn-lint yamllint nodejsscan \
+RUN ls -l /opt/ && pip3 install --no-cache-dir wheel bandit ansible-lint pipenv cfn-lint yamllint nodejsscan \
     && pip3 install --no-cache-dir appthreat-depscan \
     && mv /usr/local/bin/scan /usr/local/bin/depscan \
     && pip3 install --no-cache-dir -r /usr/local/src/requirements.txt \
@@ -128,8 +127,5 @@ RUN pip3 install --no-cache-dir wheel bandit ansible-lint pipenv cfn-lint yamlli
     && microdnf remove -y ruby-devel xz shadow-utils
 
 WORKDIR /app
-
-COPY scan /usr/local/src/
-COPY lib /usr/local/src/lib
 
 CMD [ "python3", "/usr/local/src/scan" ]
