@@ -119,12 +119,13 @@ COPY . /usr/local/src/
 
 USER root
 
-RUN ls -l /opt/ && pip3 install --no-cache-dir wheel bandit ansible-lint pipenv cfn-lint yamllint nodejsscan \
+RUN pip3 install --no-cache-dir wheel bandit ansible-lint pipenv cfn-lint yamllint nodejsscan \
     && pip3 install --no-cache-dir appthreat-depscan \
     && mv /usr/local/bin/scan /usr/local/bin/depscan \
     && pip3 install --no-cache-dir -r /usr/local/src/requirements.txt \
     && npm install -g @appthreat/cdxgen \
-    && microdnf remove -y ruby-devel xz shadow-utils
+    && microdnf remove -y ruby-devel xz shadow-utils \
+    && microdnf clean all
 
 WORKDIR /app
 
