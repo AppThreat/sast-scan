@@ -93,7 +93,6 @@ def find_repo_details(src_dir=None):
         # Is it a repo slug?
         if not repositoryUri.startswith("http") and "/" in repositoryUri:
             repositoryUri = "https://github.com/" + repositoryUri
-    LOG.info("Context: %s, %s, %s", repositoryUri, revisionId, branch)
     return {
         "repositoryUri": repositoryUri,
         "revisionId": revisionId,
