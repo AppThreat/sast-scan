@@ -116,7 +116,6 @@ def get_report_file(tool_name, reports_dir, convert, ext_name="json"):
     """
     report_fname = ""
     if reports_dir:
-        os.makedirs(reports_dir, exist_ok=True)
         report_fname = os.path.join(reports_dir, tool_name + "-report." + ext_name)
     else:
         fp = tempfile.NamedTemporaryFile(delete=False)

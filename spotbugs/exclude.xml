@@ -1,6 +1,7 @@
 <FindBugsFilter>
     <Match>
         <Class name="~org\.gradle\.*"/>
+        <Class name="~org\.springframework\.*"/>
+        <Class name="~org\.apache\.*"/>
     </Match>
 </FindBugsFilter>
-

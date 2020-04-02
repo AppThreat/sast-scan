@@ -165,6 +165,45 @@ def java_scan(src, reports_dir, convert):
       convert Boolean to enable normalisation of reports json
     """
     findsecbugs_scan(src, reports_dir, convert)
+    pmd_scan(src, reports_dir, convert)
+
+
+def pmd_scan(src, reports_dir, convert):
+    """
+    Method to initiate pmd scan of the java codebase
+    Args:
+      src Project dir
+      reports_dir Directory for output reports
+      convert Boolean to enable normalisation of reports json
+    """
+    convert_args = []
+    report_fname = utils.get_report_file("pmd", reports_dir, convert, ext_name="csv")
+    if reports_dir or convert:
+        convert_args = ["-r", report_fname, "-f", "csv"]
+    pmd_cmd = os.environ["PMD_CMD"].split(" ")
+    pmd_args = [
+        *pmd_cmd,
+        "-no-cache",
+        "--failOnViolation",
+        "false",
+        "-language",
+        "java",
+        "-version",
+        "11",
+        "-d",
+        src,
+        *convert_args,
+        "-R",
+        os.environ["APP_SRC_DIR"] + "/rules-pmd.xml",
+    ]
+    exec_tool(pmd_args, src)
+    if convert:
+        crep_fname = utils.get_report_file(
+            "pmd", reports_dir, convert, ext_name="sarif"
+        )
+        convertLib.convert_file(
+            "pmd", pmd_args[1:], src, report_fname, crep_fname,
+        )
 
 
 def findsecbugs_scan(src, reports_dir, convert):
@@ -185,9 +224,25 @@ def findsecbugs_scan(src, reports_dir, convert):
         os.environ["SPOTBUGS_HOME"] + "/lib/spotbugs.jar",
     ]
     jar_files = utils.find_jar_files()
+    src_jar_files = utils.find_files(src, "jar")
+    class_files = utils.find_files(src, "class")
+    if not class_files:
+        if src_jar_files:
+            LOG.warning(
+                "Scanning jar files is experimental and a very slow process. To use class based scanning compile the project before performing the SAST scan"
+            )
+        else:
+            LOG.warning(
+                "Please compile the project using maven or gradle before performing the SAST scan"
+            )
     with tempfile.NamedTemporaryFile(mode="w") as fp:
         fp.writelines([str(x) + "\n" for x in jar_files])
         jars_list = fp.name
+        src_jar_arg = src
+        jar_mode = False
+        if not class_files and src_jar_files:
+            src_jar_arg = " ".join(src_jar_files)
+            jar_mode = True
         findsec_args = [
             *findsec_cmd,
             "-textui",
@@ -204,10 +259,10 @@ def findsecbugs_scan(src, reports_dir, convert):
             "-medium",
             "-xml:withMessages",
             "-effort:max",
-            "-nested:false",
+            "-nested:" + ("true" if jar_mode else "false"),
             "-output",
             report_fname,
-            src,
+            src_jar_arg,
         ]
         exec_tool(findsec_args, src)
         if convert:
@@ -309,6 +364,7 @@ def main():
     reports_dir = args.reports_dir
     if not reports_dir:
         reports_dir = os.path.join(src_dir, "reports")
+    os.makedirs(reports_dir, exist_ok=True)
     scan(type, src_dir, reports_dir, args.convert)
     if reports_dir:
         sarif_files = utils.find_files(reports_dir, ".sarif")

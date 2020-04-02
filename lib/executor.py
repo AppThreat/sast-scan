@@ -52,7 +52,6 @@ def execute_default_cmd(
     """
     # Check if there is a default command specified for the given type
     # Create the reports dir
-    os.makedirs(reports_dir, exist_ok=True)
     report_fname_prefix = os.path.join(reports_dir, tool_name + "-report")
     default_cmd = " ".join(cmd_map_list) % dict(
         src=src,

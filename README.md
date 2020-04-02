@@ -203,6 +203,12 @@ Azure DevOps SARIF plugin can be integrated to show the analysis integrated with
 
 ![Build breaker](docs/build-breaker.png)
 
+## Memory and disk requirements
+
+Certain type of scanning such as staticcheck for Go and depscan for OSS audit are memory-intensive operations. We recommend at least 4GB of RAM (t2.medium) to prevent memory failures. On the disk size, scanning of jar files for java project would unzip the artifacts prior to scanning. Ensure there is enough space and write access for the container to perform this operation.
+
+In either cases, scanning would crash and error message would get raised indicating the underlying issue. 
+
 ## Alternatives
 
 GitLab [SAST](https://docs.gitlab.com/ee/user/application_security/sast/) uses numerous single purpose [analyzers](https://gitlab.com/gitlab-org/security-products/analyzers) and Go based converters to produce a custom json format. This model has the downside of increasing build times since multiple container images should get downloaded and hence is not suitable for CI environments such as Azure Pipelines, CodeBuild and Google CloudBuild. Plus the license used by GitLab is not opensource even though the analyzers merely wrap existing oss tools!
