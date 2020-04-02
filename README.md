@@ -139,11 +139,29 @@ Scan python project
 docker run --rm -e "WORKSPACE=${PWD}" -v "$PWD:/app:cached" quay.io/appthreat/sast-scan scan --src /app --type python
 ```
 
-Windows
+On Windows the command changes slightly depending on the terminal.
 
-```bash
-docker run --rm -e "WORKSPACE=%cd%" -v "%cd%:/app:cached" quay.io/appthreat/sast-scan scan --src /app --type python
+cmd
 ```
+docker run --rm -e "WORKSPACE=%cd%" -e "GITHUB_TOKEN=%GITHUB_TOKEN%" -v "%cd%:/app:cached" quay.io/appthreat/sast-scan scan
+```
+
+powershell and powershell core
+```
+docker run --rm -e "WORKSPACE=$(pwd)" -e "GITHUB_TOKEN=$env:GITHUB_TOKEN" -v "$(pwd):/app:cached" quay.io/appthreat/sast-scan scan
+```
+
+WSL bash
+```
+docker run --rm -e "WORKSPACE=${PWD}" -e "GITHUB_TOKEN=${GITHUB_TOKEN}" -v "$PWD:/app:cached" quay.io/appthreat/sast-scan scan 
+```
+
+git-bash
+```
+docker run --rm -e "WORKSPACE=${PWD}" -e "GITHUB_TOKEN=${GITHUB_TOKEN}" -v "/$PWD:/app:cached" quay.io/appthreat/sast-scan scan 
+```
+
+Don't forget the slash (/) before $PWD for git-bash!
 
 Scan multiple projects
 
@@ -189,7 +207,7 @@ Some of the reports would be converted to a standard called [SARIF](https://sari
 - Online viewer - http://sarifviewer.azurewebsites.net/
 - VS Code extension - https://marketplace.visualstudio.com/items?itemName=MS-SarifVSCode.sarif-viewer
 - Visual Studio extension - https://marketplace.visualstudio.com/items?itemName=WDGIS.MicrosoftSarifViewer
-- Azure DevOps extension - https://marketplace.visualstudio.com/items?itemName=sariftools.sarif-viewer-build-tab
+- Azure DevOps extension - https://marketplace.visualstudio.com/items?itemName=shiftleftsecurity.sl-scan-results
 
 **Example reports:**
 
