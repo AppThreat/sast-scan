@@ -127,6 +127,22 @@ steps:
 
 Refer to the [document](docs/circleci.md)
 
+## Integration with GitLab CI
+
+A sample project with config can be found [here](https://gitlab.com/prabhu3/NodeGoat/-/blob/master/.gitlab-ci.yml)
+
+```yaml
+sast:
+  stage: test
+  image: 
+    name: appthreat/sast-scan
+  script:
+    - scan --src ${CI_PROJECT_DIR} --type nodejs --out_dir ${CI_PROJECT_DIR}/reports
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/reports/
+```
+
 ## Custom integration
 
 SARIF reports produced by sast-scan can be integrated with other compatible tools. It can also be easily imported into databases such as BigQuery for visualization purposes. Refer to [integration](docs/integration.md) document for detailed explanation on the SARIF format.
