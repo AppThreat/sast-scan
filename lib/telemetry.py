@@ -1,7 +1,5 @@
 import logging
 
-import requests
-
 import lib.config as config
 
 
@@ -18,8 +16,5 @@ def track(track_obj):
     else:
         disable_telemetry = False
     if track_obj and not disable_telemetry:
-        try:
-            track_obj["tool"] = "@AppThreat/sast-scan"
-            requests.post(config.TELEMETRY_URL, json=track_obj)
-        except Exception as e:
-            logging.debug("Unable to send telemetry")
+        # configure your telemetry api server here
+        logging.debug(track_obj)
